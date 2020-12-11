@@ -8,7 +8,7 @@ app.debug = True
 # mysql config
 mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = 'anorthr2'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'q^jH9Wy8#'
+app.config['MYSQL_DATABASE_PASSWORD'] = ''
 app.config['MYSQL_DATABASE_DB'] = 'sketch'
 app.config['MYSQL_DATABASE_HOST'] = 'fall2020-6160-anorthr2.c1e1ag88025o.us-east-2.rds.amazonaws.com'
 mysql.init_app(app)
