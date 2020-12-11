@@ -1,0 +1,111 @@
+CREATE DATABASE IF NOT EXISTS `sketch`;
+
+DROP TABLE IF EXISTS `sketch`.`Grades`;
+DROP TABLE IF EXISTS `sketch`.`Instructor`;
+DROP TABLE IF EXISTS `sketch`.`StudentCourse`;
+DROP TABLE IF EXISTS `sketch`.`Student`;
+DROP TABLE IF EXISTS `sketch`.`Course`;
+DROP TABLE IF EXISTS `sketch`.`Classroom`;
+
+CREATE TABLE `sketch`.`Classroom`(
+	classroom_id INT AUTO_INCREMENT PRIMARY KEY,
+    building VARCHAR(25) NOT NULL,
+    room_number VARCHAR(5) NOT NULL
+);
+
+CREATE TABLE `sketch`.`Course`(
+	course_id INT AUTO_INCREMENT PRIMARY KEY,
+    classroom_id INT NOT NULL,
+    course_subject VARCHAR(25) NOT NULL,
+    course_number INT NOT NULL,
+    date VARCHAR(5) NOT NULL,
+    time VARCHAR(12) NOT NULL,
+    FOREIGN KEY (classroom_id)
+		REFERENCES `sketch`.`Classroom`(classroom_id)
+);
+
+CREATE TABLE `sketch`.`Student`(
+	student_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(25) NOT NULL,
+    last_name VARCHAR(25) NOT NULL,
+	email VARCHAR(25) NOT NULL,
+    password VARCHAR(25) NOT NULL,
+    logged_status BOOLEAN NOT NULL DEFAULT FALSE,
+    ta_for INT,
+    FOREIGN KEY (ta_for)
+		REFERENCES `sketch`.`Course`(course_id)
+);
+
+CREATE TABLE `sketch`.`StudentCourse`(
+student_id INT NOT NULL,
+FOREIGN KEY (student_id)
+		REFERENCES `sketch`.`Student`(student_id),
+course_id INT NOT NULL,
+FOREIGN KEY (course_id)
+		REFERENCES `sketch`.`Course`(course_id),
+    PRIMARY KEY (student_id, course_id)
+);
+
+CREATE TABLE `sketch`.`Instructor`(
+	instructor_id INT AUTO_INCREMENT PRIMARY KEY,
+    course_id INT NOT NULL,
+    first_name VARCHAR(25) NOT NULL,
+    last_name VARCHAR(25) NOT NULL,
+    email VARCHAR(25) NOT NULL,
+    password VARCHAR(25) NOT NULL,
+    logged_status BOOLEAN NOT NULL DEFAULT FALSE,
+    FOREIGN KEY (course_id)
+		REFERENCES `sketch`.`Course`(course_id)
+);
+
+CREATE TABLE `sketch`.`Grades`(
+	assignment_id INT AUTO_INCREMENT PRIMARY KEY,
+    course_id INT NOT NULL,
+    student_id INT NOT NULL,
+    letter_grade CHAR(1),
+    FOREIGN KEY (course_id)
+		REFERENCES `sketch`.`Course`(course_id),
+	FOREIGN KEY (student_id)
+		REFERENCES `sketch`.`Student`(student_id)
+);
+
+INSERT INTO `sketch`.`Classroom`
+	(`building`,`room_number`)
+VALUES
+	('Friday','255'),
+    ('Woodward','140'),
+    ('Center City','606');
+
+INSERT INTO `sketch`.`Course`
+	(`classroom_id`,`course_subject`,`course_number`,`date`,`time`)
+VALUES
+	(1,'Finance','6213','W','5-8:15'),
+    (2,'Comp Science','6160','TR','12-1:45'),
+    (3,'Math','6213','MWF','10-11');
+
+INSERT INTO `sketch`.`Student`
+	(`first_name`,`last_name`,`email`,`password`,`ta_for`)
+VALUES
+	('Peter','Trzil','ptrzil@uncc.edu','8fj3f*F',null),
+    ('Andrew','Northrup','anorthrup@uncc.edu','j8fsd7F#',1),
+    ('Di','Zhang','dzhang@uncc.edu','*Fjsd#ff44',null);
+
+INSERT INTO `sketch`.`StudentCourse`
+	(`student_id`,`course_id`)
+VALUES
+	(1,1),
+    (2,2),
+    (3,3);
+
+INSERT INTO `sketch`.`Instructor`
+	(`course_id`,`first_name`,`last_name`,`email`,`password`)
+VALUES
+	(1,'Joe','Teacher','jteacherman@uncc.edu','&Fshd7f7'),
+    (2,'Jane','Instructor','jinstructor@uncc.edu','84jt4&HF');
+
+INSERT INTO `sketch`.`Grades`
+	(`course_id`,`student_id`,`letter_grade`)
+VALUES
+	(1,1,'B'),
+    (2,2,'A'),
+    (3,3,'B');
